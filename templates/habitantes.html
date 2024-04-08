@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habitantes</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles_pestanas.css')}}">
+</head>
+<body>
+    <div class="tabs">
+        <div class="tab-container">
+            <div id="tab4" class="tab"> 
+                <a href="#tab4">Eliminar habitantes</a>
+                <div class="tab-content">
+                    <h2>Eliminar habitantes</h2>
+                    <p>Lorem ipsum ...</p>
+                </div>
+            </div>
+            <div id="tab3" class="tab"> 
+                <a href="#tab3">Ver habitantes</a>
+                <div class="tab-content">
+                    <h2>Ver habitantes</h2>
+                    <p>Lorem ipsum ...</p>
+                </div>
+            </div>
+            <div id="tab2" class="tab">
+                <a href="#tab2">Actualizar datos de persona</a>
+                <div class="tab-content">
+                    <h2>Actualizar datos de persona</h2>
+                    <p>Lorem ipsum ...</p>
+                </div>
+            </div> 
+            <div id="tab1" class="tab">
+                <a href="#tab1">Registrar nueva persona</a>
+                <div class="tab-content">
+                    <h2>Registro</h2>
+                    <form action="">
+                        <label for="nombre1">Primer nombre</label>
+                        <input type="text" name="nombre1" id="">
+
+                        <label for="nombre2">Segundo nombre</label>
+                        <input type="text" name="nombre2" id="">
+
+                        <label for="apellido1">Primer apellido</label>
+                        <input type="text" name="apellido1" id="">
+
+                        <label for="apellido2">Segundo apellido</label>
+                        <input type="text" name="apellido2" id="">
+
+                        <label for="tipo-doc">Tipo de documento</label>
+                        <select name="tipo-doc" id="">
+                            <option value="null">-- Seleccionar --</option>
+                            <option value=1>Cedula de ciudadania</option>
+                            <option value=2>Tarjeta de identidad</option>
+                            <option value=3>Cedula de extranjería</option>
+                            <option value=4>Pasaporte</option>
+                        </select>
+
+                        <label for="num-doc">Número de documento</label>
+                        <input type="text" name="num-doc" id="">
+
+                        <label for="fecha-nac">Fecha de nacimiento</label>
+                        <input type="date" name="fecha-nac" id="">
+
+                        <label for="telefono">Telefono</label>
+                        <input type="number" name="telefono" id="">
+
+                        <label for="sexo">Sexo</label>
+                        <select name="sexo" id="">
+                            <option value="null">-- Seleccionar --</option>
+                            <option value=1>Femenino</option>
+                            <option value=2>Masculino</option>
+                        </select>
+
+                        <input type="submit" value="Enviar">
+                    </form>
+                </div> 
+            </div> 
+        </div>
+    </div>   
+</body>
+</html>
