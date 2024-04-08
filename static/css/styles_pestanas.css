@@ -85,3 +85,122 @@ a {
   background-color: var(--tabs-dark-color); 
   z-index: 0; 
 }
+
+.div-form {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: 20% 60% 20%;
+}
+
+.form {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  border: 2px solid rgb(0, 27, 100);
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 5fr 1fr 5fr;
+  grid-template-rows: repeat(5, 1fr);
+  row-gap: 20px;
+}
+
+.label {
+  display: block;
+}
+
+#div-nom1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+#div-nom2 {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+#div-ape1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+#div-ape2 {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+#div-tipo-doc {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+
+#div-num-doc {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+
+#div-fecha-nac {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 4;
+  grid-row-end: 5;
+}
+
+#div-sexo {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 4;
+  grid-row-end: 5;
+}
+
+#div-telefono {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 5;
+  grid-row-end: 6;
+}
+
+#input-submit {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 6;
+  grid-row-end: 7;
+  color: white;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: 2px solid rgb(0, 27, 100);
+  border-radius: 7px;
+  background-color: rgb(90, 119, 199);
+}
+
+#input-submit:hover {
+  background-color: rgb(0, 27, 100);
+}
+
+.input {
+  width: 100%;
+  border: 2px solid rgb(0, 27, 100);
+  border-radius: 7px;
+  padding: 5px 10px;
+  color: black;
+  font-family: sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
