@@ -29,5 +29,5 @@ print(response)
 response = supabase.table('Persona').delete().eq('num_documento', 100000).execute();
 response = insertar("100000", 1, "brayan", "camilo", "rodriguez", "diaz", 100000, date(2000,12,20), True)
 print (response)
-response = supabase.table('Persona').update({"tipo_documento": 2}).eq('num_documento', 100000)
+response = supabase.table('Persona').update({"tipo_documento": 2}).eq('num_documento', 100000).execute()
 print(response)
