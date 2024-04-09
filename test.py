@@ -7,7 +7,6 @@ key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 supabase: Client = create_client(url, key)
 
 #queries
-response = supabase.table('Municipio').select("*").execute()
 def insertar(num_documento: str, tipo_documento: int, primer_nombre: str, segundo_nombre: str, 
         primer_apellido: str, segundo_apellido: str, telefono:int, fecha_nacimiento:date, sexo: bool):
     response = supabase.table('Persona').insert({
@@ -23,4 +22,12 @@ def insertar(num_documento: str, tipo_documento: int, primer_nombre: str, segund
     }).execute()
     return response
 
-insertar("100000", 1, "brayan", "camilo", "rodriguez", "diaz", 100000, date(2000,12,20), True)
+response = supabase.table('Persona').select("*").execute()
+print(response)
+
+#como un pop devuelve los datos de lo que borro
+response = supabase.table('Persona').delete().eq('num_documento', 100000).execute();
+response = insertar("100000", 1, "brayan", "camilo", "rodriguez", "diaz", 100000, date(2000,12,20), True)
+print (response)
+response = supabase.table('Persona').update({"tipo_documento": 2}).eq('num_documento', 100000)
+print(response)
