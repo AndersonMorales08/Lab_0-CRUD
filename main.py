@@ -14,6 +14,6 @@ def habitantes():
 def viviendas():
     return render_template('viviendas.html')
 
-@app.route("/habitantes")
+@app.route("/municipios")
 def municipios():
     return render_template('municipios.html')
