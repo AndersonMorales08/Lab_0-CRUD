@@ -8,52 +8,19 @@
     <script defer src="{{url_for('static', filename='js/habitantes.js')}}"></script>
 </head>
 <body>
-    <div>
-        <a href="{{url_for('index')}}">Volver</a>
+    <div class="div-volver">
+        <div class="div-message">
+            <p id="message" class="message">
+                
+            </p>
+        </div>
+        <a class="a-volver" href="{{url_for('index')}}">Volver</a>
     </div>
     <!-- "{{url_for('municipios')}}" -->
     <div class="tabs">
-        <div class="tab-container">
-            <div id="tab2" class="tab"> 
-                <a href="#tab2">Ver habitantes</a>
-                <div class="tab-content">
-                    <h2>Habitantes</h2>
-                    <div class="search">
-                        <input type="text" placeholder="Escribir número de documento">
-                        <button>Buscar</button>
-                    </div>
-                    <div>
-                        <table>
-                            <tr>
-                                <th>Nombre (s)</th>
-                                <th>Apellidos</th>
-                                <th>Tipo de documento</th>
-                                <th>Número de documento</th>
-                                <th>Edad</th>
-                                <th>Sexo</th>
-                                <th>Telefono</th>
-                            </tr>
-                            {% for res in response %}
-                                <tr data-persona="{{res}}">
-                                    <td>{{res["nombres"]}}</td>
-                                    <td>{{res["apellidos"]}}</td>
-                                    <td>{{res["tipo_documento"]}}</td>
-                                    <td>{{res["num_doc"]}}</td>
-                                    <td>{{res["edad"]}}</td>
-                                    <td>{{res["sexo"]}}</td>
-                                    <td>{{res["telefono"]}}</td>
-                                    <td class="td-btns">
-                                        <button class="btn-edit-habitante">Editar</button>
-                                        <button>Eliminar</button>
-                                    </td>
-                                </tr>
-                            {%endfor %}
-                        </table>
-                    </div>
-                </div>
-            </div> 
-            <div id="tab1" class="tab">
-                <a href="#tab1">Registrar nueva persona</a>
+        <div class="tab-container"> 
+            <div id="tab2" class="tab">
+                <a href="#tab2">Registrar nueva persona</a>
                 <div class="tab-content">
                     <h2>Registro de persona</h2>
                     <div class="div-form">
@@ -117,15 +84,59 @@
                         </form>
                     </div>
                 </div> 
+            </div>
+            <div id="tab1" class="tab"> 
+                <a href="#tab1">Ver habitantes</a>
+                <div class="tab-content">
+                    <h2>Habitantes</h2>
+                    <div class="search">
+                        <label class="label-search">Buscar: </label>
+                        <input type="text" id="search" class="input-search" placeholder="Escribir número de documento">
+                    </div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre (s)</th>
+                                    <th>Apellidos</th>
+                                    <th>Tipo de documento</th>
+                                    <th>Número de documento</th>
+                                    <th>Edad</th>
+                                    <th>Sexo</th>
+                                    <th>Telefono</th>
+                                    <th>Hola</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body">
+                            {% for res in response %}
+                                <tr data-persona="{{res}}">
+                                    <td>{{res["nombres"]}}</td>
+                                    <td>{{res["apellidos"]}}</td>
+                                    <td>{{res["tipo_documento"]}}</td>
+                                    <td>{{res["num_doc"]}}</td>
+                                    <td>{{res["edad"]}}</td>
+                                    <td>{{res["sexo"]}}</td>
+                                    <td>{{res["telefono"]}}</td>
+                                    <td class="td-btns">
+                                        <button class="btn-edit-habitante">Editar</button>
+                                        <button class="btn-delete-habitante">Eliminar</button>
+                                    </td>
+                                </tr>
+                            {%endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div> 
         </div>
     </div> 
     <div class="modal-container" id="modal-container">
         <div class="modal">
+            <h2 class="subtitle">Cambiar datos</h2>
             <form action="{{url_for('actualizar_habitante')}}" method="post" class="form-edit">
                 <div id="div-nom1-edit">
                     <label for="nombre1-edit" id="label-nom1-edit" class="label-edit">Primer nombre</label>
-                    <input class="input-edit" required type="text" name="nombre1-edit" id="nombre1-edit">
+                    <input class="input-edit" type="text" name="nombre1-edit" id="nombre1-edit">
                 </div>
 
                 <div id="div-nom2-edit">
@@ -134,18 +145,18 @@
                 </div>
 
                 <div id="div-ape1-edit">
-                    <label for="apellido1-edit" required class="label-edit" id="label-ape1-edit">Primer apellido</label>
+                    <label for="apellido1-edit" class="label-edit" id="label-ape1-edit">Primer apellido</label>
                     <input type="text" class="input-edit" name="apellido1-edit" id="apellido1-edit">
                 </div>
 
                 <div id="div-ape2-edit">
                     <label for="apellido2-edit" class="label-edit" id="label-ape2-edit">Segundo apellido</label>
-                    <input type="text" class="input-edit" required name="apellido2-edit" id="apellido2-edit">
+                    <input type="text" class="input-edit" name="apellido2-edit" id="apellido2-edit">
                 </div>
 
                 <div id="div-tipo-doc-edit">
                     <label for="tipo-doc-edit" class="label-edit" id="label-tipo-doc-edit">Tipo de documento</label>
-                    <select name="tipo-doc-edit" class="input-edit" required id="tipo-doc-edit">
+                    <select name="tipo-doc-edit" class="input-edit" id="tipo-doc-edit">
                         <option value="null">-- Seleccionar --</option>
                         <option value=1>Cédula de ciudadania</option>
                         <option value=2>Tarjeta de identidad</option>
@@ -160,7 +171,7 @@
                 </div>
 
                 <div id="div-fecha-nac-edit">
-                    <label for="fecha-nac-edit" required class="label-edit" id="label-fecha-nac-edit">Fecha de nacimiento</label>
+                    <label for="fecha-nac-edit" class="label-edit" id="label-fecha-nac-edit">Fecha de nacimiento</label>
                     <input type="date" name="fecha-nac-edit" class="input-edit" id="fecha-nac-edit">
                 </div>
 
@@ -171,7 +182,7 @@
 
                 <div id="div-sexo-edit">
                     <label for="sexo-edit" class="label-edit" id="label-sexo-edit">Sexo</label>
-                    <select name="sexo-edit" id="sexo-edit" required class="input-edit">
+                    <select name="sexo-edit" id="sexo-edit" class="input-edit">
                         <option value="null">-- Seleccionar --</option>
                         <option value=0>Femenino</option>
                         <option value=1>Masculino</option>
@@ -182,6 +193,72 @@
                 <button id="btn-edit-cancel">Cancelar</button>
             </form>
         </div>
-    </div>  
+    </div>
+    
+    <div class="modal-container" id="modal-container-eliminar">
+        <div class="modal">
+            <h2 class="subtitle-delete">Eliminar datos</h2>
+            <p class="p-delete">¿Está seguro de que quiere eliminar a esta persona?</p>
+            <form action="{{url_for('eliminar_habitante')}}" method="post" class="form-delete">
+                <div id="div-nom1-delete">
+                    <label for="nombre1-delete" id="label-nom1-delete" class="label-edit">Primer nombre</label>
+                    <input class="input-delete" disabled type="text" name="nombre1-delete" id="nombre1-delete">
+                </div>
+
+                <div id="div-nom2-delete">
+                    <label for="nombre2" id="label-nom2-delete" class="label-edit">Segundo nombre</label>
+                    <input type="text" disabled class="input-delete" name="nombre2-delete" id="nombre2-delete">
+                </div>
+
+                <div id="div-ape1-delete">
+                    <label for="apellido1-delete" class="label-edit" id="label-ape1-delete">Primer apellido</label>
+                    <input type="text" class="input-delete" disabled name="apellido1-delete" id="apellido1-delete">
+                </div>
+
+                <div id="div-ape2-delete">
+                    <label for="apellido2-delete" class="label-edit" id="label-ape2-delete">Segundo apellido</label>
+                    <input type="text" class="input-delete" disabled name="apellido2-delete" id="apellido2-delete">
+                </div>
+
+                <div id="div-tipo-doc-delete">
+                    <label for="tipo-doc-delete" class="label-edit" id="label-tipo-doc-delete">Tipo de documento</label>
+                    <select name="tipo-doc-delete" class="input-delete" disabled id="tipo-doc-delete">
+                        <option value="null">-- Seleccionar --</option>
+                        <option value=1>Cédula de ciudadania</option>
+                        <option value=2>Tarjeta de identidad</option>
+                        <option value=3>Cédula de extranjería</option>
+                        <option value=4>Pasaporte</option>
+                    </select>
+                </div>
+
+                <div id="div-num-doc-delete">
+                    <label for="num-doc-delete" class="label-edit" id="label-num-doc-delete">Número de documento</label>
+                    <input type="text" disabled name="num-doc-delete" class="input-delete" id="num-doc-delete">
+                </div>
+
+                <div id="div-fecha-nac-delete">
+                    <label for="fecha-nac-delete" class="label-edit" id="label-fecha-nac-delete">Fecha de nacimiento</label>
+                    <input type="date" name="fecha-nac-delete" class="input-delete" disabled id="fecha-nac-delete">
+                </div>
+
+                <div id="div-telefono-delete">
+                    <label for="telefono-delete" class="label-edit" id="label-telefono-delete">Telefono</label>
+                    <input type="number" name="telefono-delete" class="input-delete" disabled id="telefono-delete">
+                </div>
+
+                <div id="div-sexo-delete">
+                    <label for="sexo-delete" class="label-edit" id="label-sexo-delete">Sexo</label>
+                    <select name="sexo-delete" id="sexo-delete" disabled class="input-delete">
+                        <option value="null">-- Seleccionar --</option>
+                        <option value=0>Femenino</option>
+                        <option value=1>Masculino</option>
+                    </select>
+                </div>
+
+                <input id="input-submit-delete" type="submit" value="Eliminar">
+                <button id="btn-delete-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

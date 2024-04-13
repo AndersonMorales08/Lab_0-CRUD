@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-from test import response, insertar, actualizar_persona
-from datetime import datetime
+from test import select_persona, insertar, actualizar_persona, delete_persona
+from datetime import datetime, date
 from dateutil import relativedelta
 
 def prepararDatos(response):
@@ -48,40 +48,58 @@ app = Flask(__name__, template_folder="templates")
 def index():
     return render_template('index.html')
 
-@app.route("/habitantes", methods=['POST', "GET"])
+@app.route("/habitantes")
 def habitantes():
+    return render_template('habitantes.html', response=prepararDatos(response=select_persona()))
+
+@app.route("/habitantes/insertar", methods=['POST', "GET"])
+def insertar_habitante():
     if request.method == "POST":
-        nombre1 = request.form["nombre1"]
-        nombre2 = request.form["nombre2"]
-        apellido1 = request.form["apellido1"]
-        apellido2 = request.form["apellido2"]
-        tipo_doc = request.form["tipo-doc"]
-        num_doc = request.form["num-doc"]
-        fecha_nac = request.form["fecha-nac"]
-        telefono = request.form["telefono"]
-        sexo = request.form["sexo"]
-
-        print(nombre1, nombre2, apellido1, apellido2, tipo_doc, num_doc, fecha_nac, telefono, sexo)  
-        print(insertar(num_doc, tipo_doc, nombre1, nombre2, apellido1, apellido2, telefono, fecha_nac, sexo))
-    print(response)
-    return render_template('habitantes.html', response=prepararDatos(response=response))
-
+        nombre1 = request.json["nombre1"]
+        nombre2 = request.json["nombre2"]
+        apellido1 = request.json["apellido1"]
+        apellido2 = request.json["apellido2"]
+        tipo_doc = request.json["tipo-doc"]
+        num_doc = request.json["num-doc"]
+        fecha_nac = request.json["fecha-nac"]
+        telefono = request.json["telefono"]
+        sexo = request.json["sexo"] 
+        
+        try:
+            insertar(num_doc, tipo_doc, nombre1, nombre2, apellido1, apellido2, telefono, fecha_nac, sexo)
+            return {"response": True}
+        except:
+            return {"response": False}
+        
 @app.route("/habitantes/actualizar", methods=['POST', "GET"])
 def actualizar_habitante():
     if request.method == "POST":
-        nombre1 = request.form["nombre1-edit"]
-        nombre2 = request.form["nombre2-edit"]
-        apellido1 = request.form["apellido1-edit"]
-        apellido2 = request.form["apellido2-edit"]
-        tipo_doc = request.form["tipo-doc-edit"]
-        num_doc = request.form["num-doc-edit"]
-        fecha_nac = request.form["fecha-nac-edit"]
-        telefono = request.form["telefono-edit"]
-        sexo = request.form["sexo-edit"]
-
-        print(nombre1, nombre2, apellido1, apellido2, tipo_doc, num_doc, fecha_nac, telefono, sexo)  
-        actualizar_persona(num_doc, tipo_doc, nombre1, nombre2, apellido1, apellido2, telefono, fecha_nac, sexo)
-        return redirect(url_for('habitantes'))
+        nombre1 = request.json["nombre1-edit"]
+        nombre2 = request.json["nombre2-edit"]
+        apellido1 = request.json["apellido1-edit"]
+        apellido2 = request.json["apellido2-edit"]
+        tipo_doc = request.json["tipo-doc-edit"]
+        num_doc = request.json["num-doc-edit"]
+        fecha_nac = request.json["fecha-nac-edit"]
+        telefono = request.json["telefono-edit"]
+        sexo = request.json["sexo-edit"]
+  
+        try:
+            actualizar_persona(num_doc, tipo_doc, nombre1, nombre2, apellido1, apellido2, telefono, fecha_nac, sexo)
+            return {"response": True}
+        except:
+            return {"response": False}
+        
+    
+@app.post("/habitantes/eliminar")
+def eliminar_habitante():
+    if request.method == "POST":
+        num_doc = request.json['num-doc-delete']
+        try:
+            delete_persona(num_doc)
+            return {"response": True}
+        except:
+            return {"response": False}
 
 @app.route("/viviendas")
 def viviendas():
