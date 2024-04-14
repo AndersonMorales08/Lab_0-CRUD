@@ -7,6 +7,7 @@ key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 supabase: Client = create_client(url, key)
 
 #queries
+# ---------- Habitante ----------
 def insertar(num_documento: str, tipo_documento: int, primer_nombre: str, segundo_nombre: str, primer_apellido: str, segundo_apellido: str, telefono:int, fecha_nacimiento:date, sexo: bool):
     response = supabase.table('Persona').insert({
         "num_documento": num_documento, 
@@ -19,8 +20,7 @@ def insertar(num_documento: str, tipo_documento: int, primer_nombre: str, segund
         "fecha_nacimiento": str(fecha_nacimiento),
         "sexo": sexo
     }).execute()
-    print("----------INSERTADO---------")
-    # return response
+    return response
 
 def actualizar_persona(num_documento: str, tipo_documento: int, primer_nombre: str, segundo_nombre: str, 
         primer_apellido: str, segundo_apellido: str, telefono:int, fecha_nacimiento:date, sexo: bool):
@@ -35,20 +35,51 @@ def actualizar_persona(num_documento: str, tipo_documento: int, primer_nombre: s
         "fecha_nacimiento": str(fecha_nacimiento),
         "sexo": sexo
     }).eq('num_documento', num_documento).execute()
-    print("----------ACTUALIZADO---------")
-    print(count)
     return response
 
 def delete_persona(num_documento: str):
     response, count = supabase.table('Persona').delete().eq('num_documento', num_documento).execute()
-    print("----------ELIMINADO---------")
-    print(count)
-    return response    
+    return response  
 
 def select_persona():
     response = supabase.table('Persona').select("*").order('primer_nombre', desc=False).execute()
-    print(response)
+    
     return response
+
+# ---------- Depende_de ----------  
+def insertar_dependiente(num_doc_dependiente:str, num_doc_cabeza:str):
+    response = supabase.table('Depende_de').insert({
+        'dependiente': num_doc_dependiente,
+        'cabeza_familia': num_doc_cabeza
+    }).execute()
+
+    return response
+
+def select_dependiente():
+    response = supabase.table('Depende_de').select('*').execute()
+    return response
+
+# ---------- Municipio ----------
+def select_municipio():
+    response = supabase.table('Municipio').select("*").order('nombre_municipio', desc=False).execute()
+    return response
+
+# ---------- Habita en muicipio ---------
+def insertar_habita_municipio(num_doc:str, id_municipio:int):
+    response = supabase.table('Habita_en_Municipio').insert({
+        'num_documento': num_doc,
+        'id_municipio': id_municipio
+    }).execute()
+    return response
+
+def select_habita_municipio():
+    response = supabase.table('Habita_en_Municipio').select('Persona(*), Municipio(*)').execute()
+    return response 
+
+def delete_habita_municipio(num_documento: str):
+    response, count = supabase.table('Habita_en_Municipio').delete().eq('num_documento', num_documento).execute()
+    return response 
+
 
 #como un pop devuelve los datos de lo que borro
 # response = supabase.table('Persona').delete().eq('num_documento', 100000).execute();

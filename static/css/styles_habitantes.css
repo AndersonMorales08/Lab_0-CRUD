@@ -102,8 +102,8 @@ a {
   padding: 10px;
   display: grid;
   grid-template-columns: 5fr 1fr 5fr;
-  grid-template-rows: repeat(5, 1fr);
-  row-gap: 20px;
+  grid-template-rows: repeat(6, 1fr);
+  row-gap: 6px;
 }
 
 .form-edit, .form {
@@ -251,6 +251,27 @@ a {
   grid-row-end: 6;
 }
 
+#div-municipio, #div-municipio-edit, #div-municipio-delete {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 5;
+  grid-row-end: 6;
+}
+
+#div-cabeza-familia, #div-cabeza-familia-edit {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 6;
+  grid-row-end: 7;
+}
+
+#div-num-doc-cabeza, #div-num-doc-cabeza-edit {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 6;
+  grid-row-end: 7;
+}
+
 #input-submit-edit, #input-submit-delete, .btn-edit-habitante, #btn-edit-cancel, #btn-delete-cancel, .btn-delete-habitante, #input-submit, .btn-search {
   font-family: sans-serif;
   font-weight: bold;
@@ -282,15 +303,15 @@ a {
 #input-submit-edit, #input-submit-delete {
   grid-column-start: 1;
   grid-column-end: 2;
-  grid-row-start: 6;
-  grid-row-end: 7;
+  grid-row-start: 7;
+  grid-row-end: 8;
 }
 
 #input-submit {
   grid-column-start: 2;
   grid-column-end: 3;
-  grid-row-start: 6;
-  grid-row-end: 7;
+  grid-row-start: 7;
+  grid-row-end: 8;
 }
 
 #btn-edit-cancel, .btn-delete-habitante, #btn-delete-cancel, #input-submit-delete {
@@ -301,13 +322,13 @@ a {
 #btn-edit-cancel, #btn-delete-cancel {
   grid-column-start: 3;
   grid-column-end: 4;
-  grid-row-start: 6;
-  grid-row-end: 7;
+  grid-row-start: 7;
+  grid-row-end: 8;
 }
 
 .btn-edit-habitante, .btn-delete-habitante {
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.6em;
   box-sizing: border-box;
   width: 100%;
   margin: 5px;
@@ -321,9 +342,17 @@ a {
   background-color: rgb(0, 27, 100);
 }
 
+.div-num-doc-cabeza {
+  display: none;
+}
+
+.div-num-doc-cabeza-show {
+  display: block;
+}
+
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
@@ -393,6 +422,14 @@ h2 {
   font-weight: bold;
 }
 
+/* .td-btns {
+  display: flex;
+} */
+
+thead {
+  font-size: 0.7em;
+}
+
 table, tr, th, td {
   border: black 2px solid;
 }
@@ -409,4 +446,9 @@ td {
   text-align: center;
   padding: 5px 10px;
 }
+
+.td-data {
+  font-size: 0.7em;
+}
+
 

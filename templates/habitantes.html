@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habitantes</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/styles_pestanas.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles_habitantes.css')}}">
     <script defer src="{{url_for('static', filename='js/habitantes.js')}}"></script>
 </head>
 <body>
@@ -79,6 +79,27 @@
                                     <option value=1>Masculino</option>
                                 </select>
                             </div>
+                            <div id="div-municipio">
+                                <label for="municipio" class="label" id="label-municipio">Municipio en que habita</label>
+                                <select name="municipio" id="municipio" required class="input">
+                                    <option value="null">-- Seleccionar --</option>
+                                    {% for municipio in municipios %}
+                                        <option value='{{municipio["id_municipio"]}}'>{{municipio["nombre_municipio"]}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div id="div-cabeza-familia">
+                                <label for="cabeza-familia" class="label" id="label-caeza-familia">¿Es cabeza de familia?</label>
+                                <select name="cabeza-familia" id="cabeza-familia" required class="input">
+                                    <option value="null">-- Seleccionar --</option>
+                                    <option value=0>Si</option>
+                                    <option value=1>No</option>
+                                </select>
+                            </div>
+                            <div id="div-num-doc-cabeza" class="div-num-doc-cabeza">
+                                <label for="num-doc-cabeza" required class="label" id="label-num-doc-cabeza">Número de documento del cabeza de familia</label>
+                                <input type="text" name="num-doc-cabeza" class="input num-doc-cabeza" id="num-doc-cabeza">
+                            </div>
 
                             <input id="input-submit" type="submit" value="Enviar">
                         </form>
@@ -104,19 +125,21 @@
                                     <th>Edad</th>
                                     <th>Sexo</th>
                                     <th>Telefono</th>
-                                    <th>Hola</th>
+                                    <th>Municipio</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="body">
                             {% for res in response %}
                                 <tr data-persona="{{res}}">
-                                    <td>{{res["nombres"]}}</td>
-                                    <td>{{res["apellidos"]}}</td>
-                                    <td>{{res["tipo_documento"]}}</td>
-                                    <td>{{res["num_doc"]}}</td>
-                                    <td>{{res["edad"]}}</td>
-                                    <td>{{res["sexo"]}}</td>
-                                    <td>{{res["telefono"]}}</td>
+                                    <td class="td-data">{{res["nombres"]}}</td>
+                                    <td class="td-data">{{res["apellidos"]}}</td>
+                                    <td class="td-data">{{res["tipo_documento"]}}</td>
+                                    <td class="td-data">{{res["num_doc"]}}</td>
+                                    <td class="td-data">{{res["edad"]}}</td>
+                                    <td class="td-data">{{res["sexo"]}}</td>
+                                    <td class="td-data">{{res["telefono"]}}</td>
+                                    <td class="td-data">{{res["municipio"]}}</td>
                                     <td class="td-btns">
                                         <button class="btn-edit-habitante">Editar</button>
                                         <button class="btn-delete-habitante">Eliminar</button>
@@ -188,7 +211,16 @@
                         <option value=1>Masculino</option>
                     </select>
                 </div>
-
+                <div id="div-municipio-edit">
+                    <label for="municipio-edit" class="label-edit" id="label-municipio-edit">Municipio en que habita</label>
+                    <select name="municipio-edit" id="municipio-edit" required class="input-edit">
+                        <option value="null">-- Seleccionar --</option>
+                        {% for municipio in municipios %}
+                            <option value='{{municipio["id_municipio"]}}'>{{municipio["nombre_municipio"]}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
                 <input id="input-submit-edit" type="submit" value="Cambiar">
                 <button id="btn-edit-cancel">Cancelar</button>
             </form>
@@ -252,6 +284,15 @@
                         <option value="null">-- Seleccionar --</option>
                         <option value=0>Femenino</option>
                         <option value=1>Masculino</option>
+                    </select>
+                </div>
+                <div id="div-municipio-delete">
+                    <label for="municipio-delete" class="label-edit" id="label-municipio-delete">Municipio en que habita</label>
+                    <select name="municipio-delete" disabled id="municipio-delete" required class="input-delete">
+                        <option value="null">-- Seleccionar --</option>
+                        {% for municipio in municipios %}
+                            <option value='{{municipio["id_municipio"]}}'>{{municipio["nombre_municipio"]}}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
