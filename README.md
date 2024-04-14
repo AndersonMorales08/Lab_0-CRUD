@@ -1,5 +1,5 @@
 # Lab_0-CRUD
-Este mini-proyecto es un CRUD, en el cual, se tienen que agregar, ver, editar y eliminar, municipios, personas y viviendas; al igual que agregar las relaciones entre estas distintas entidades.
+Este mini-proyecto es un CRUD, en el cual, se tienen que agregar, ver, editar y eliminar,tanto  municipios como personas y viviendas; al igual que agregar las relaciones entre estas distintas entidades.
 
 ## Paquetes para poder programar y ejecutar el código
 ~~~
