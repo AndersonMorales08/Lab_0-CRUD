@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viviendas</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/styles_pestanas.css')}}">
+    <!-- Enlace al archivo CSS styles_viviendas.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_viviendas.css') }}">
+    <script defer src="{{url_for('static', filename='js/viviendas.js')}}"></script>
 </head>
 <body>
     <div class="tabs">
         <div class="tab-container">
-            {% block comment %} <div id="tab4" class="tab"> 
+            <div id="tab4" class="tab"> 
                 <a href="#tab4">Eliminar vivienda</a>
                 <div class="tab-content">
                     <h2>Eliminar vivienda</h2>
@@ -20,9 +22,23 @@
                 <a href="#tab3">Ver viviendas</a>
                 <div class="tab-content">
                     <h2>Ver viviendas</h2>
-                    <!-- Tabla o contenido para mostrar las viviendas -->
+                    <button id="mostrar-viviendas-btn">Mostrar viviendas</button>
+                    <div class="tabla-container">
+                        <table id="tabla-viviendas">
+                            <thead>
+                                <tr>
+                                    <th>Dirección</th>
+                                    <th>Capacidad</th>
+                                    <th>Pisos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Las viviendas se mostrarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div> {% endblock %}
+            </div>
             <div id="tab2" class="tab">
                 <a href="#tab2">Actualizar datos de vivienda</a>
                 <div class="tab-content">
@@ -37,54 +53,37 @@
                                 <label for="direccion" class="label" id="label-direccion">Nueva dirección:</label>
                                 <input class="input" type="text" name="direccion" id="direccion">
                             </div>
-            
                             <div id="div-capacidad">
                                 <label for="capacidad" class="label" id="label-capacidad">Nueva capacidad:</label>
                                 <input type="number" class="input" name="capacidad" id="capacidad">
                             </div>
-            
                             <div id="div-pisos">
                                 <label for="pisos" class="label" id="label-pisos">Nuevo número de pisos:</label>
                                 <input type="number" class="input" name="pisos" id="pisos">
                             </div>
-            
-                            <div id="div-fecha-creacion">
-                                <label for="fecha-creacion" class="label" id="label-fecha-creacion">Nueva fecha de creación:</label>
-                                <input type="date" name="fecha_creacion" class="input" id="fecha-creacion">
-                            </div>
-            
                             <input id="input-submit" type="submit" value="Actualizar">
                         </form>
                     </div>
                 </div>
             </div>
-            
             <div id="tab1" class="tab">
                 <a href="#tab1">Registrar nueva vivienda</a>
                 <div class="tab-content">
                     <h2>Registro de vivienda</h2>
                     <div class="div-form">
-                        <form action="" class="form">
+                        <form action="/registrar_vivienda" method="post" class="form">
                             <div id="div-direccion">
                                 <label for="direccion" class="label" id="label-direccion">Dirección</label>
                                 <input class="input" type="text" name="direccion" id="direccion">
                             </div>
-
                             <div id="div-capacidad">
                                 <label for="capacidad" class="label" id="label-capacidad">Capacidad</label>
                                 <input type="number" class="input" name="capacidad" id="capacidad">
                             </div>
-
                             <div id="div-pisos">
                                 <label for="pisos" class="label" id="label-pisos">Número de pisos</label>
                                 <input type="number" class="input" name="pisos" id="pisos">
                             </div>
-
-                            <div id="div-fecha-creacion">
-                                <label for="fecha-creacion" class="label" id="label-fecha-creacion">Fecha de creación</label>
-                                <input type="date" name="fecha-creacion" class="input" id="fecha-creacion">
-                            </div>
-
                             <input id="input-submit" type="submit" value="Enviar">
                         </form>
                     </div>
@@ -92,5 +91,8 @@
             </div> 
         </div>
     </div>   
+
+    <!-- Enlace al archivo JavaScript -->
+    <script src="{{ url_for('static', filename='js/viviendas.js') }}"></script>
 </body>
 </html>

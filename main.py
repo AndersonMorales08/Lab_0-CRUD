@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
-from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio
+from flask import Flask, jsonify, render_template, request, redirect, url_for
+from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, actualizar_vivienda_db, registrar_vivienda_db, seleccionar_viviendas
 from datetime import datetime, date
 from dateutil import relativedelta
 
@@ -117,7 +117,55 @@ def eliminar_habitante():
 
 @app.route("/viviendas")
 def viviendas():
-    return render_template('viviendas.html')
+    # Obtener las viviendas desde la base de datos
+    viviendas = seleccionar_viviendas()
+    return render_template('viviendas.html', viviendas=viviendas)
+
+@app.route("/actualizar_vivienda", methods=['POST'])
+def actualizar_vivienda():
+    if request.method == "POST":
+        vivienda_id = request.form["vivienda_id"]
+        direccion = request.form["direccion"]
+        capacidad = request.form["capacidad"]
+        pisos = request.form["pisos"]
+
+        try:
+            # Lógica para actualizar la vivienda en la base de datos
+            actualizar_vivienda_db(vivienda_id, direccion, capacidad, pisos)
+            return {"response": True}
+        except:
+            return {"response": False}
+
+@app.route("/registrar_vivienda", methods=['POST'])
+def registrar_vivienda():
+    if request.method == "POST":
+        direccion = request.form["direccion"]
+        capacidad = request.form["capacidad"]
+        pisos = request.form["pisos"]
+        fecha_creacion = datetime.now().date()  # Obtiene la fecha actual del servidor
+
+        try:
+            # Lógica para insertar la nueva vivienda en la base de datos
+            registrar_vivienda_db(direccion, capacidad, pisos)
+            return jsonify({"success": True})
+        except Exception as e:
+            return jsonify({"error": str(e)})
+
+@app.route('/obtener_viviendas', methods=['GET'])
+def obtener_viviendas():
+    try:
+        # Lógica para obtener las viviendas de la base de datos
+        viviendas = seleccionar_viviendas()
+
+        # Extraer los datos relevantes del objeto APIResponse
+        datos_viviendas = viviendas.data
+
+        # Retornar los datos serializados a JSON
+        return jsonify(datos_viviendas)
+    except Exception as e:
+        # Manejar cualquier excepción y retornar un mensaje de error
+        return jsonify({"error": str(e)})
+
 
 @app.route("/municipios")
 def municipios():

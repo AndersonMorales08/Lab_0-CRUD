@@ -1,5 +1,5 @@
 from supabase import create_client, Client
-from datetime import date
+from datetime import datetime, date
 
 #inicialización
 url: str = "https://uesgiyebiofvboxlzrpk.supabase.co"
@@ -79,6 +79,34 @@ def select_habita_municipio():
 def delete_habita_municipio(num_documento: str):
     response, count = supabase.table('Habita_en_Municipio').delete().eq('num_documento', num_documento).execute()
     return response 
+
+
+def registrar_vivienda_db(direccion: str, capacidad: int, pisos: int):
+    fecha_creacion = datetime.now().strftime("%Y-%m-%d")  # Convertir la fecha a una cadena
+    response = supabase.table('Vivienda').insert({
+        "direccion": direccion,
+        "capacidad": capacidad,
+        "pisos": pisos,
+        # "created_at": fecha_creacion
+    }).execute()
+    return response
+
+def actualizar_vivienda_db(vivienda_id: int, direccion: str, capacidad: int, pisos: int):
+    response, count = supabase.table('Vivienda').update({
+        "direccion": direccion,
+        "capacidad": capacidad,
+        "pisos": pisos
+    }).eq('vivienda_id', vivienda_id).execute()
+    return response
+
+def eliminar_vivienda(vivienda_id: int):
+    response, count = supabase.table('Vivienda').delete().eq('vivienda_id', vivienda_id).execute()
+    return response
+
+def seleccionar_viviendas():
+    response = supabase.table('Vivienda').select("*").execute()
+    return response
+
 
 
 #como un pop devuelve los datos de lo que borro
