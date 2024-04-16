@@ -56,7 +56,7 @@ def insertar_dependiente(num_doc_dependiente:str, num_doc_cabeza:str):
     return response
 
 def select_dependiente():
-    response = supabase.table('Depende_de').select('*').execute()
+    response = supabase.table('Depende_de').select('cabeza_familia(*), dependiente(*)').execute()
     return response
 
 # ---------- Municipio ----------
@@ -74,7 +74,11 @@ def insertar_habita_municipio(num_doc:str, id_municipio:int):
 
 def select_habita_municipio():
     response = supabase.table('Habita_en_Municipio').select('Persona(*), Municipio(*)').execute()
-    return response 
+    return response
+
+def select_uno_habita_municipio(num_doc:str):
+    response = supabase.table('Habita_en_Municipio').select('Municipio(nombre_municipio)').eq('num_documento', num_doc).execute()
+    return response  
 
 def delete_habita_municipio(num_documento: str):
     response, count = supabase.table('Habita_en_Municipio').delete().eq('num_documento', num_documento).execute()

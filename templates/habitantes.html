@@ -19,6 +19,57 @@
     <!-- "{{url_for('municipios')}}" -->
     <div class="tabs">
         <div class="tab-container"> 
+            <div id="tab3" class="tab"> 
+                <a href="#tab3">Ver familia</a>
+                <div class="tab-content">
+                    <h2>Familias</h2>
+                    <div class="search">
+                        <label class="label-search">Buscar: </label>
+                        <input type="text" id="search" class="input-search" placeholder="Escribir número de documento">
+                    </div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre (s) de cabeza de familia</th>
+                                    <th>Apellidos de cabeza de familia</th>
+                                    <th>Número de documento</th>
+                                    <th>Edad</th>
+                                    <th>Sexo</th>
+                                    <th>Cantidad de dependientes</th>
+                                    <th>Municipio</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="body">
+                            {% for cabeza_familia in familias %}
+                            <tr data-persona="{{cabeza_familia['num_documento']}}">
+                                <td class="td-data">{{cabeza_familia["primer_nombre"]}} {{cabeza_familia["segundo_nombre"]}}</td>
+                                <td class="td-data">{{cabeza_familia["primer_apellido"]}} {{cabeza_familia["segundo_apellido"]}}</td>
+                                <td class="td-data">{{cabeza_familia["num_documento"]}}</td>
+                                <td class="td-data">{{cabeza_familia["edad"]}}</td>
+                                {% if cabeza_familia["sexo"] == True %}
+                                    <td class="td-data">
+                                        Masculino
+                                    </td>
+                                {% else %}
+                                    <td class="td-data">
+                                        Femenino
+                                    </td>
+                                {% endif %}
+                                <td class="td-data">{{cabeza_familia["cant_dependientes"]}}</td>
+                                <td class="td-data">{{cabeza_familia["nombre_municipio"]}}</td>
+                                <td class="td-btns">
+                                    <button class="btn-edit-habitante">Ver familia</button>
+                                    <button class="btn-delete-habitante">Eliminar</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <div id="tab2" class="tab">
                 <a href="#tab2">Registrar nueva persona</a>
                 <div class="tab-content">

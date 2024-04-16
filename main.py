@@ -1,47 +1,59 @@
 from flask import Flask, render_template, request, redirect, url_for
-from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio
+from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, select_uno_habita_municipio
 from datetime import datetime, date
 from dateutil import relativedelta
 
-def prepararDatos(response):
+def prepararDatosPersona(response, entity):
     dataArr = []
     for i in range(len(response.data)):
         rawData = response.data[i]
         tipo_doc = None
         sexo = None
-        edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(rawData["Persona"]["fecha_nacimiento"], '%Y-%m-%d'))
+        edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(rawData[entity]["fecha_nacimiento"], '%Y-%m-%d'))
 
         # print(edad.years)
 
-        if rawData["Persona"]["tipo_documento"] == 1:
+        if rawData[entity]["tipo_documento"] == 1:
             tipo_doc = "Cédula"
-        elif rawData["Persona"]["tipo_documento"] == 2:
+        elif rawData[entity]["tipo_documento"] == 2:
             tipo_doc = "Tarjeta de identidad"
-        elif rawData["Persona"]["tipo_documento"] == 3:
+        elif rawData[entity]["tipo_documento"] == 3:
             tipo_doc = "Cédula de extranjería"
-        elif rawData["Persona"]["tipo_documento"] == 4:
+        elif rawData[entity]["tipo_documento"] == 4:
             tipo_doc = "Pasaporte"
 
-        if rawData["Persona"]["sexo"]:
+        if rawData[entity]["sexo"]:
             sexo = "Masculino"
         else:
             sexo ="Femenino"
 
         data = {
-            "nombres": f"{rawData['Persona']['primer_nombre'].capitalize()} {rawData['Persona']['segundo_nombre'].capitalize()}",
-            "apellidos": f"{rawData['Persona']['primer_apellido'].capitalize()} {rawData['Persona']['segundo_apellido'].capitalize()}",
+            "nombres": f"{rawData[entity]['primer_nombre'].capitalize()} {rawData[entity]['segundo_nombre'].capitalize()}",
+            "apellidos": f"{rawData[entity]['primer_apellido'].capitalize()} {rawData[entity]['segundo_apellido'].capitalize()}",
             "tipo_documento": tipo_doc,
-            "telefono": rawData["Persona"]["telefono"],
+            "telefono": rawData[entity]["telefono"],
             "sexo": sexo,
-            "num_doc": rawData["Persona"]["num_documento"],
+            "num_doc": rawData[entity]["num_documento"],
             "edad": edad.years,
-            "fecha_nac": rawData["Persona"]["fecha_nacimiento"],
-            "id_municipio": rawData["Municipio"]["id_municipio"],
-            "municipio": rawData["Municipio"]["nombre_municipio"]
+            "fecha_nac": rawData[entity]["fecha_nacimiento"]
         }
 
         dataArr.append(data)
 
+    return dataArr
+
+def prepararDatosMunicipios(obj, entity):
+    dataArr = []
+    for i in range(len(obj.data)):
+        rawData = obj.data[i] 
+        
+        municipio ={
+            "id_municipio": rawData[entity]["id_municipio"],
+            "municipio": rawData[entity]["nombre_municipio"]
+        }
+
+        dataArr.append(municipio)
+    
     return dataArr
 
 app = Flask(__name__, template_folder="templates")
@@ -52,12 +64,41 @@ def index():
 
 @app.route("/habitantes")
 def habitantes():
-    # print('---------- Depende ----------')
-    # print(select_dependiente())
-    # print('---------- Depende ----------')
+    arrCabezasFamilia = []
+    familias = select_dependiente().data
+    for j in range(len(familias)):
+        if len(arrCabezasFamilia) != 0:
+            for k in range(len(arrCabezasFamilia)):
+                if familias[j]["cabeza_familia"]["num_documento"] == arrCabezasFamilia[k]["num_documento"]:
+                    arrCabezasFamilia[k]["dependientes"].append(familias[j]["dependiente"])
+                    break
+                elif k == len(arrCabezasFamilia) - 1:
+                    arrCabezasFamilia.append(familias[j]["cabeza_familia"])
+                    arrCabezasFamilia[-1]["dependientes"] = [familias[j]["dependiente"]]
+        else:
+            arrCabezasFamilia.append(familias[j]["cabeza_familia"])
+            arrCabezasFamilia[-1]["dependientes"] = [familias[j]["dependiente"]]
+
+    for m in arrCabezasFamilia:
+        m |= select_uno_habita_municipio(m["num_documento"]).data[0]["Municipio"]
+        edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(m["fecha_nacimiento"], '%Y-%m-%d'))
+        m |= {'edad': edad.years}
+        m |= {'cant_dependientes': len(m["dependientes"])}
+            
+    print('---------- Depende ----------')
+    # print(select_dependiente().data)
+    print(arrCabezasFamilia)
+    print('---------- Depende ----------')
     # print(select_persona())
-    print(select_habita_municipio())
-    return render_template('habitantes.html', response=prepararDatos(response=select_habita_municipio()), municipios=select_municipio().data)
+    personas = prepararDatosPersona(select_habita_municipio(), "Persona")
+    mun = prepararDatosMunicipios(select_habita_municipio(), "Municipio")
+
+    for i in range(len(personas)):
+        personas[i] |= mun[i]
+
+    # print(personas)
+    # print(prepararDatos(select_dependiente()))
+    return render_template('habitantes.html', response=personas, municipios=select_municipio().data, familias=arrCabezasFamilia)
 
 @app.route("/habitantes/insertar", methods=['POST', "GET"])
 def insertar_habitante():
