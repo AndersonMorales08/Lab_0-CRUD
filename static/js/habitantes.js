@@ -1,7 +1,10 @@
 const btns_edit = document.querySelectorAll('.btn-edit-habitante');
+const btns_see = document.querySelectorAll('.btn-see-familia');
+const btns_del_familia = document.querySelectorAll('.btn-delete-familia');
 const btns_delete = document.querySelectorAll('.btn-delete-habitante'); 
 const btn_edit_cancel = document.querySelector('#btn-edit-cancel');
 const btn_delete_cancel = document.querySelector('#btn-delete-cancel');
+const btn_familia_cancel = document.querySelector('#btn-familia-cancel');
 const modal_container = document.querySelector('#modal-container');
 const modal_container_delete = document.querySelector('#modal-container-eliminar');
 const delete_submit = document.querySelector('#input-submit-delete');
@@ -9,6 +12,12 @@ const input_submit = document.querySelector('#input-submit');
 const input_submit_edit = document.querySelector('#input-submit-edit');
 const input_search = document.getElementById("search");
 const input_cabeza_familia = document.getElementById('cabeza-familia');
+const input_search_family = document.getElementById("search-family");
+const modal = document.getElementById("modal-container-familia");
+const modal_add_dep = document.getElementById("modal-container-add-familia");
+const btn_add_dependiente = document.getElementById("btn-familia-add");
+const cancel_add_btn = document.getElementById("btn-cancel-add-dep");
+const btn_submit_dependiente = document.getElementById("submit-add-dep");
 
 async function requestData(url, data) {
     const response = await fetch(url, {
@@ -23,12 +32,12 @@ async function requestData(url, data) {
     return response.json()
 }
 
-function search(){
+function search(search_input, body, col){
     var num_cols, display, input, filter, table_body, tr, td, i, txtValue;
-    num_cols = 4;
-    input = document.getElementById("search");
+    num_cols = col;
+    input = document.getElementById(search_input);
     filter = input.value.toUpperCase();
-    table_body = document.getElementById("body");
+    table_body = document.getElementById(body);
     tr = table_body.getElementsByTagName("tr");
 
     for(i=0; i< tr.length; i++){				
@@ -120,6 +129,41 @@ function showMessage(correct, message_container, messages) {
     }
 }
 
+function deleteDependiente(class_btn) {
+    const btns_delete = document.querySelectorAll(`.${class_btn}`);
+    btns_delete.forEach(btn => {
+        btn.addEventListener("click", e => {
+            const message = document.querySelector('#message');
+            const messages = ['Dependiente elimanado con exito', 'No se pudo eliminar el dependiente'];
+            const doc = btn.parentNode.parentNode.dataset.doc;
+
+            console.log(doc);
+
+            requestData('/depende_de/eliminar_solo_dependiente', {'num-doc-delete': doc}).
+            then(data => showMessage(data.response, message, messages));
+
+            modal.classList.remove('show');
+
+            reloadPage();
+        }); 
+    });
+}
+
+btns_del_familia.forEach(btn => {
+    btn.addEventListener('click', e => {
+        const cabeza_doc = btn.parentNode.parentNode.dataset.doc;
+        const message = document.querySelector('#message');
+        const messages = ['Cabeza de familia elimanada con exito', 'No se pudo eliminar la cabeza de familia'];
+
+        console.log(cabeza_doc);
+
+        requestData('/depende_de/eliminar_cabeza', {'num-doc-delete': cabeza_doc}).
+        then(data => showMessage(data.response, message, messages));
+
+        reloadPage();
+    });
+});
+
 btns_edit.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const inputs = ['nombre1-edit', 'nombre2-edit', 'apellido1-edit', 'apellido2-edit', 'tipo-doc-edit', 'num-doc-edit', 'fecha-nac-edit', 'telefono-edit', 'sexo-edit', 'municipio-edit'];
@@ -135,6 +179,97 @@ btns_edit.forEach(btn => {
     });
 });
 
+btn_submit_dependiente.addEventListener('click', e => {
+    const bodyTable = document.getElementById("body-dependientes");
+    const input = document.getElementById("num_doc_dependiente");
+    const message = document.querySelector('#message');
+    const messages = ['Dependiente añadido con exito', 'No se pudo añadir el dependiente'];
+
+    e.preventDefault()
+
+    console.log(input.value);
+
+    requestData('/depende_de/actualizar', {'cabeza': bodyTable.dataset.doc, 'dependiente': input.value}).
+    then(data => showMessage(data.response, message, messages));
+
+    modal.classList.remove('show');
+    modal_add_dep.classList.remove('show');
+
+    reloadPage();
+});
+
+cancel_add_btn.addEventListener('click', e => desactiveModal(e, modal_add_dep));
+
+btns_see.forEach(btn => {
+    btn.addEventListener('click', e => {
+        const p_cabeza = document.getElementById("cabeza-familia-tag");
+        const bodyTable = document.getElementById("body-dependientes");
+        const dependientes = btn.parentNode.parentNode.dataset.dependientes;
+        let arr_dependientes = [];
+        let str_dependientes = dependientes.slice(1, dependientes.length-1).replaceAll("}, {", "};{").split(";");
+        p_cabeza.innerText = btn.parentNode.parentNode.dataset.nombre
+
+        bodyTable.innerHTML = "";
+        bodyTable.setAttribute('data-doc', btn.parentNode.parentNode.dataset.doc);
+
+        str_dependientes.forEach(str => {
+            let obj = {};
+            str.slice(1, str.length-1).split(", ").forEach(attr => cleanString(attr, obj));
+            arr_dependientes.push(obj);
+        });
+
+        // console.log(arr_dependientes);
+
+        for (let i = 0; i < arr_dependientes.length; i++) {
+            const tr = document.createElement("tr");
+            const td_nombres = document.createElement("td");
+            td_nombres.classList.add("td-data");
+            td_nombres.innerText = `${arr_dependientes[i]["primer_nombre"]} ${arr_dependientes[i]["segundo_nombre"]}`
+            tr.append(td_nombres);
+            const td_apellidos = document.createElement("td");
+            td_apellidos.classList.add("td-data");
+            td_apellidos.innerText = `${arr_dependientes[i]["primer_apellido"]} ${arr_dependientes[i]["segundo_apellido"]}`
+            tr.append(td_apellidos);
+            const td_num_doc = document.createElement("td");
+            td_num_doc.classList.add("td-data");
+            td_num_doc.innerText = arr_dependientes[i]["num_documento"]; 
+            tr.append(td_num_doc);
+            const td_edad = document.createElement("td");
+            td_edad.classList.add("td-data");
+            td_edad.innerText = arr_dependientes[i]["edad"];
+            tr.append(td_edad);
+            tr.setAttribute("data-doc", arr_dependientes[i]["num_documento"])
+            const td_sexo = document.createElement("td");
+            td_sexo.classList.add("td-data");
+
+            if (arr_dependientes[i]["sexo"] === "True"){
+                td_sexo.innerText = "Masculino";
+            } else {
+                td_sexo.innerText = "Femenino";
+            }
+            tr.append(td_sexo);
+            const td_municipio = document.createElement("td");
+            td_municipio.classList.add("td-data");
+            td_municipio.innerText = arr_dependientes[i]["nombre_municipio"];
+            tr.append(td_municipio);
+            const td_btn = document.createElement("td");
+            const btn_eliminar_dep = document.createElement("button");
+            btn_eliminar_dep.innerText = "Quitar"
+            btn_eliminar_dep.classList.add('btn-delete-dependiente');
+            td_btn.append(btn_eliminar_dep);
+            tr.append(td_btn);
+            bodyTable.append(tr);
+        }
+        deleteDependiente('btn-delete-dependiente');
+        modal.classList.add('show');
+    });
+});
+
+btn_add_dependiente.addEventListener('click', e => {
+    modal_add_dep.classList.add('show');
+});
+
+btn_familia_cancel.addEventListener('click', e => desactiveModal(e, modal));
 btn_edit_cancel.addEventListener('click', e => desactiveModal(e, modal_container)); 
 
 btns_delete.forEach(btn => {
@@ -215,7 +350,9 @@ input_submit_edit.addEventListener('click', (e) => {
     setTimeout(reloadPage(), 2000);
 });
 
-input_search.addEventListener('keyup', search)
+input_search.addEventListener('keyup', e => search("search", "body", 4));
+
+input_search_family.addEventListener('keyup', e => search("search-family", "body-family", 3))
 
 input_cabeza_familia.addEventListener('change', (e) => {
     const input_num_doc_cabeza = document.getElementById('div-num-doc-cabeza');
