@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, select_uno_habita_municipio
+from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, select_uno_habita_municipio, delete_cabeza, delete_dependiente, select_cabeza, select_solo_dependiente
 from datetime import datetime, date
 from dateutil import relativedelta
 
@@ -84,6 +84,10 @@ def habitantes():
         edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(m["fecha_nacimiento"], '%Y-%m-%d'))
         m |= {'edad': edad.years}
         m |= {'cant_dependientes': len(m["dependientes"])}
+        for n in m["dependientes"]:
+            n |= select_uno_habita_municipio(n["num_documento"]).data[0]["Municipio"]
+            edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(n["fecha_nacimiento"], '%Y-%m-%d'))
+            n |= {'edad': edad.years}
             
     print('---------- Depende ----------')
     # print(select_dependiente().data)
@@ -125,6 +129,43 @@ def insertar_habitante():
         except:
             return {"response": False}
         
+@app.route("/depende_de/actualizar", methods=['POST', "GET"])
+def depende_de_actualizar():
+    if request.method == "POST":
+        cabeza = request.json["cabeza"]
+        dependiente = request.json["dependiente"]
+
+        print(cabeza)
+        print(dependiente)
+        
+        try:
+            insertar_dependiente(dependiente, cabeza)
+            return {"response": True}
+        except:
+            return {"response": False}
+        
+@app.route("/depende_de/eliminar_cabeza", methods=['POST', "GET"])
+def depende_de_eliminar_cabeza():
+    if request.method == "POST":
+        cabeza = request.json["num-doc-delete"]
+        
+        try:
+            delete_cabeza(cabeza)
+            return {"response": True}
+        except:
+            return {"response": False}
+
+@app.route("/depende_de/eliminar_solo_dependiente", methods=['POST', "GET"])
+def depende_de_eliminar_solo_dependiente():
+    if request.method == "POST":
+        doc = request.json["num-doc-delete"]
+        
+        try:
+            delete_dependiente(doc)
+            return {"response": True}
+        except:
+            return {"response": False}
+
 @app.route("/habitantes/actualizar", methods=['POST', "GET"])
 def actualizar_habitante():
     if request.method == "POST":
@@ -150,6 +191,11 @@ def eliminar_habitante():
     if request.method == "POST":
         num_doc = request.json['num-doc-delete']
         try:
+            if len(select_solo_dependiente(num_doc).data) != 0:
+                delete_dependiente(num_doc)
+            elif len(select_cabeza(num_doc).data) != 0:
+                delete_cabeza(num_doc)
+            
             delete_habita_municipio(num_doc)
             delete_persona(num_doc)
             return {"response": True}

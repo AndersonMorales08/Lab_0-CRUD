@@ -59,6 +59,22 @@ def select_dependiente():
     response = supabase.table('Depende_de').select('cabeza_familia(*), dependiente(*)').execute()
     return response
 
+def select_cabeza(num_doc:str):
+    response = supabase.table('Depende_de').select('*').eq('cabeza_familia', num_doc).execute()
+    return response
+
+def select_solo_dependiente(num_doc:str):
+    response = supabase.table('Depende_de').select('*').eq('dependiente', num_doc).execute()
+    return response
+
+def delete_dependiente(num_documento: str):
+    response, count = supabase.table('Depende_de').delete().eq('dependiente', num_documento).execute()
+    return response
+
+def delete_cabeza(num_documento: str):
+    response, count = supabase.table('Depende_de').delete().eq('cabeza_familia', num_documento).execute()
+    return response
+
 # ---------- Municipio ----------
 def select_municipio():
     response = supabase.table('Municipio').select("*").order('nombre_municipio', desc=False).execute()
@@ -91,3 +107,5 @@ def delete_habita_municipio(num_documento: str):
 # print (response)
 # response = supabase.table('Persona').update({"tipo_documento": 2}).eq('num_documento', 100000).execute()
 # print(response)
+
+# delete_dependiente('1001218979')

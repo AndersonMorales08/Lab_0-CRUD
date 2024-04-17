@@ -25,7 +25,7 @@
                     <h2>Familias</h2>
                     <div class="search">
                         <label class="label-search">Buscar: </label>
-                        <input type="text" id="search" class="input-search" placeholder="Escribir número de documento">
+                        <input type="text" id="search-family" class="input-search" placeholder="Escribir número de documento">
                     </div>
                     <div>
                         <table>
@@ -41,9 +41,9 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody id="body">
+                            <tbody id="body-family">
                             {% for cabeza_familia in familias %}
-                            <tr data-persona="{{cabeza_familia['num_documento']}}">
+                            <tr data-doc="{{cabeza_familia['num_documento']}}" data-nombre="{{cabeza_familia['primer_nombre']}} {{cabeza_familia['segundo_nombre']}} {{cabeza_familia['primer_apellido']}} {{cabeza_familia['segundo_apellido']}}" data-dependientes="{{cabeza_familia['dependientes']}}">
                                 <td class="td-data">{{cabeza_familia["primer_nombre"]}} {{cabeza_familia["segundo_nombre"]}}</td>
                                 <td class="td-data">{{cabeza_familia["primer_apellido"]}} {{cabeza_familia["segundo_apellido"]}}</td>
                                 <td class="td-data">{{cabeza_familia["num_documento"]}}</td>
@@ -60,8 +60,8 @@
                                 <td class="td-data">{{cabeza_familia["cant_dependientes"]}}</td>
                                 <td class="td-data">{{cabeza_familia["nombre_municipio"]}}</td>
                                 <td class="td-btns">
-                                    <button class="btn-edit-habitante">Ver familia</button>
-                                    <button class="btn-delete-habitante">Eliminar</button>
+                                    <button class="btn-see-familia">Ver familia</button>
+                                    <button class="btn-delete-familia">Eliminar</button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -350,6 +350,57 @@
                 <input id="input-submit-delete" type="submit" value="Eliminar">
                 <button id="btn-delete-cancel">Cancelar</button>
             </form>
+        </div>
+    </div>
+    <div class="modal-container" id="modal-container-familia">
+        <div class="modal">
+            <div class="div-cabeza">
+                <h3 class="subtitle">Cabeza de familia:</h3>
+                <p id="cabeza-familia-tag"></p>
+            </div>
+            <h2>Dependientes:</h2>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre (s)</th>
+                            <th>Apellidos</th>
+                            <th>Número de documento</th>
+                            <th>Edad</th>
+                            <th>Sexo</th>
+                            <th>Municipio</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-dependientes">
+                        <tr>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-btns">
+                                <button class="btn-edit-habitante">Editar</button>
+                                <button class="btn-delete-habitante">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button id="btn-familia-add">Añadir</button>
+            <button id="btn-familia-cancel">Cancelar</button>
+        </div>
+    </div>
+    <div class="modal-container" id="modal-container-add-familia">
+        <div class="modal">
+            <form action="">
+                <label  for="num_doc_dependiente">Número de documento de dependiente:</label>
+                <input class="input-add-dep" type="text" placeholder="Ingrese número de documento" id="num_doc_dependiente" name="num_doc_dependiente">
+                <input id="submit-add-dep" type="submit" value="Añadir">
+            </form>
+
+            <button id="btn-cancel-add-dep">Cancelar</button>
         </div>
     </div>
 </body>
