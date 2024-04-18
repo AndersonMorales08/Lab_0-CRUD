@@ -80,6 +80,26 @@ def select_municipio():
     response = supabase.table('Municipio').select("*").order('nombre_municipio', desc=False).execute()
     return response
 
+def insertar_municipio(nom_mun: str, area: float, presupuesto: float):
+    response = supabase.table('Municipio').insert({
+        "nombre_municipio": nom_mun,
+        "area": area,
+        "presupuesto": presupuesto
+    }).execute()
+    return response
+
+def actualizar_municipio(id: int, nom_mun: str, area: float, presupuesto: float):
+    response = supabase.table('Municipio').update({
+        "nombre_municipio": nom_mun,
+        "area": area,
+        "presupuesto": presupuesto
+    }).eq('id_municipio', id).execute()
+    return response
+
+def delete_municipio(id_mun: str):
+    response, count = supabase.table('Municipio').delete().eq('id_municipio', id_mun).execute()
+    return response
+
 # ---------- Habita en muicipio ---------
 def insertar_habita_municipio(num_doc:str, id_municipio:int):
     response = supabase.table('Habita_en_Municipio').insert({
@@ -87,6 +107,17 @@ def insertar_habita_municipio(num_doc:str, id_municipio:int):
         'id_municipio': id_municipio
     }).execute()
     return response
+
+def actualizar_habita_municipio(num_documento: str, id_municipio: int):
+    response, count = supabase.table('Habita_en_Municipio').update({
+        "id_municipio": id_municipio
+    }).eq('num_documento', num_documento).execute()
+    return response
+
+def select_un_habita_municipio(id_municipio):
+    response = supabase.table('Habita_en_Municipio').select('num_documento(*), id_municipio(*)').eq("id_municipio", id_municipio).execute()
+    return response
+
 
 def select_habita_municipio():
     response = supabase.table('Habita_en_Municipio').select('Persona(*), Municipio(*)').execute()

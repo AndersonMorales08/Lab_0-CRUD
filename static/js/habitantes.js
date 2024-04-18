@@ -339,11 +339,12 @@ input_submit_edit.addEventListener('click', (e) => {
     const input_fecha_nac = document.querySelector('#fecha-nac-edit');
     const input_telefono = document.querySelector('#telefono-edit');
     const input_sexo = document.querySelector('#sexo-edit')
+    const input_municipio = document.querySelector("#municipio-edit");
     const message = document.querySelector('#message');
     const messages = ['Registro actualizado con exito', 'No se pudo actualizar el registro'];
 
     e.preventDefault();
-    requestData('/habitantes/actualizar', {'num-doc-edit': input_num_doc.value, 'nombre1-edit': capitalizeFirstLetter(input_nom1.value), 'nombre2-edit': capitalizeFirstLetter(input_nom2.value), 'apellido1-edit': capitalizeFirstLetter(input_ape1.value), 'apellido2-edit': capitalizeFirstLetter(input_ape2.value), 'tipo-doc-edit': input_tipo_doc.value, 'fecha-nac-edit': input_fecha_nac.value, 'telefono-edit': input_telefono.value, 'sexo-edit': input_sexo.value}).
+    requestData('/habitantes/actualizar', {'num-doc-edit': input_num_doc.value, 'nombre1-edit': capitalizeFirstLetter(input_nom1.value), 'nombre2-edit': capitalizeFirstLetter(input_nom2.value), 'apellido1-edit': capitalizeFirstLetter(input_ape1.value), 'apellido2-edit': capitalizeFirstLetter(input_ape2.value), 'tipo-doc-edit': input_tipo_doc.value, 'fecha-nac-edit': input_fecha_nac.value, 'telefono-edit': input_telefono.value, 'sexo-edit': input_sexo.value, 'municipio-edit': input_municipio.value}).
     then(data => showMessage(data.response, message, messages));
     modal_container.classList.remove('show');
 

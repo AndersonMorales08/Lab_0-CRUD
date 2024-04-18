@@ -4,8 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Municipios</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles_municipios.css')}}">
+    <script defer src="{{url_for('static', filename='js/municipios.js')}}"></script>
 </head>
 <body>
-    
+    <div class="div-volver">
+        <div class="div-message">
+            <p id="message" class="message">
+                
+            </p>
+        </div>
+        <a class="a-volver" href="{{url_for('index')}}">Volver</a>
+    </div>
+    <!-- "{{url_for('municipios')}}" -->
+    <div class="tabs">
+        <div class="tab-container"> 
+            <div id="tab2" class="tab">
+                <a href="#tab2">Registrar nuevo municipio</a>
+                <div class="tab-content">
+                    <h2>Registro de municipio</h2>
+                    <div class="div-form">
+                        <form action="{{url_for('habitantes')}}" method="post" class="form">
+                            <div id="div-nom-municipio">
+                                <label for="nombre-municpio" id="label-mon-municipio" class="label">Nombre de municipio:</label>
+                                <input class="input" required type="text" name="nombre-municpio" id="nombre-municpio">
+                            </div>
+
+                            <div id="div-area">
+                                <label for="area" id="label-area" class="label">Area:</label>
+                                <input type="number" class="input" name="area" id="area">
+                            </div>
+
+                            <div id="div-presup">
+                                <label for="presup" required class="label" id="label-presup">Presupuesto:</label>
+                                <input type="number" class="input" name="presup" id="presup">
+                            </div>
+                            <div id="div-submit-new-municipio">
+                                <input id="input-submit" type="submit" value="Enviar">
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            </div>
+            <div id="tab1" class="tab"> 
+                <a href="#tab1">Ver Municipios</a>
+                <div class="tab-content">
+                    <h2>Municipios</h2>
+                    <div class="search">
+                        <label class="label-search">Buscar: </label>
+                        <input type="text" id="search" class="input-search" placeholder="Escribir nombre del municipio">
+                    </div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre del municpio</th>
+                                    <th>Area</th>
+                                    <th>Presupuesto</th>
+                                    <th>Número de habitantes</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="body">
+                            {% for mun in municipios %}
+                                <tr data-id='{{mun["id_municipio"]}}' data-nom='{{mun["nombre_municipio"]}}' data-area='{{mun["area"]}}' data-presupuesto='{{mun["presupuesto"]}}'>
+                                    <td class="td-data">{{mun["nombre_municipio"]}}</td>
+                                    <td class="td-data">{{mun["area"]}}</td>
+                                    <td class="td-data">$ {{mun["presupuesto"]}}</td>
+                                    <td class="td-data">{{mun["cantidad_habitantes"]}}</td> 
+                                    <td class="td-btns">
+                                        <button class="btn-ver-municipio">Ver</button>
+                                        <button class="btn-edit-municipio">Editar</button>
+                                        <button class="btn-delete-municipio">Eliminar</button>
+                                    </td>
+                                </tr>
+                            {%endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    <div class="modal-container" id="modal-container">
+        <div class="modal">
+            <h2 class="subtitle">Cambiar datos</h2>
+            <form action="" method="post" class="form-edit">
+                <div id="div-nom-municipio-edit">
+                    <label for="nombre-municpio-edit" id="label-nom-municipio-edit" class="label">Nombre de municipio:</label>
+                    <input class="input-edit" required type="text" name="nombre-municpio-edit" id="nombre-municpio-edit">
+                </div>
+
+                <div id="div-area-edit">
+                    <label for="area-edit" id="label-area-edit" class="label">Area:</label>
+                    <input type="number" class="input-edit" name="area-edit" id="area-edit">
+                </div>
+
+                <div id="div-presup-edit">
+                    <label for="presup-edit" required class="label" id="label-presup-edit">Presupuesto:</label>
+                    <input type="number" class="input-edit" name="presup-edit" id="presup-edit">
+                </div>
+                <div id="div-submit-edit-municipio">
+                    <input id="input-submit-edit" type="submit" value="Enviar">
+                    <button id="btn-edit-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-container" id="modal-container-eliminar">
+        <div class="modal">
+            <h2 class="subtitle-delete">Eliminar datos</h2>
+            <p class="p-delete">¿Está seguro de que quiere eliminar a esta persona?</p>
+            <form action="{{url_for('eliminar_habitante')}}" method="post" class="form-delete">
+                
+                <div id="div-nom-municipio-delete">
+                    <label for="nombre-municpio-delete" id="label-nom-municipio-delete" class="label">Nombre de municipio:</label>
+                    <input class="input-delete" required type="text" name="nombre-municpio-delete" disabled id="nombre-municpio-delete">
+                </div>
+
+                <div id="div-area-delete">
+                    <label for="area-delete" id="label-area-delete" class="label">Area:</label>
+                    <input type="number" class="input-delete" disabled name="area-delete" id="area-delete">
+                </div>
+
+                <div id="div-presup-delete">
+                    <label for="presup-delete" class="label" id="label-presup-delete">Presupuesto:</label>
+                    <input type="number" class="input-delete" disabled name="presup-delete" id="presup-delete">
+                </div>
+
+                <div id="div-submit-delete-municipio">
+                    <input id="input-submit-delete" type="submit" value="Eliminar">
+                    <button id="btn-delete-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-container" id="modal-container-habitantes">
+        <div class="modal">
+            <h2 class="subtitle">Habitantes</h2>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre (s)</th>
+                            <th>Apellidos</th>
+                            <th>Número de documento</th>
+                            <th>Edad</th>
+                            <th>Sexo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-habitantes">
+                        <tr>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                            <td class="td-data"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button id="btn-habitantes-cancel">Cerrar</button>
+        </div>
+    </div>
 </body>
 </html>

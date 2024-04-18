@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
-from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, actualizar_vivienda_db, registrar_vivienda_db, seleccionar_viviendas, select_uno_habita_municipio, delete_cabeza, delete_dependiente, select_cabeza, select_solo_dependiente
+from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, actualizar_vivienda_db, registrar_vivienda_db, seleccionar_viviendas, select_uno_habita_municipio, delete_cabeza, delete_dependiente, select_cabeza, select_solo_dependiente, actualizar_habita_municipio, select_un_habita_municipio, insertar_municipio, actualizar_municipio, delete_municipio
 from datetime import datetime, date
 from dateutil import relativedelta
 
@@ -178,9 +178,11 @@ def actualizar_habitante():
         fecha_nac = request.json["fecha-nac-edit"]
         telefono = request.json["telefono-edit"]
         sexo = request.json["sexo-edit"]
+        municipio = request.json["municipio-edit"]
   
         try:
             actualizar_persona(num_doc, tipo_doc, nombre1, nombre2, apellido1, apellido2, telefono, fecha_nac, sexo)
+            actualizar_habita_municipio(id_municipio=municipio, num_documento=num_doc)
             return {"response": True}
         except:
             return {"response": False}
@@ -256,4 +258,73 @@ def obtener_viviendas():
 
 @app.route("/municipios")
 def municipios():
-    return render_template('municipios.html')
+    arr_municipios = []
+    # print('------------- MUNICIPIO --------------')
+    # print(select_municipio())
+    for i in select_municipio().data:
+        i |= {'cantidad_habitantes': len(select_un_habita_municipio(i["id_municipio"]).data)}
+        # print(i)
+        arr_municipios.append(i)
+    # print('------------- MUNICIPIO --------------')
+    return render_template('municipios.html', municipios=arr_municipios)
+
+@app.route("/municipios/insertar", methods = ['POST'])
+def municipios_insertar():
+    if request.method == "POST":
+        nom_municipio = request.json['nom-mun']
+        area = request.json['area']
+        presupuesto = request.json['presupuesto']
+
+        try:
+            insertar_municipio(nom_municipio, area, presupuesto)
+            return {"response": True}
+        except:
+            return {"response": False}
+        
+@app.route("/municipios/editar", methods = ['POST'])
+def municipios_editar():
+    if request.method == "POST":
+        id_municipio = request.json['id-mun']
+        nom_municipio = request.json['nom-mun']
+        area = request.json['area']
+        presupuesto = request.json['presupuesto']
+
+        try:
+            actualizar_municipio(id_municipio, nom_municipio, area, presupuesto)            
+            return {"response": True}
+        except:
+            return {"response": False}
+        
+@app.route("/municipios/eliminar", methods = ['POST'])
+def municipios_eliminar():
+    if request.method == "POST":
+        id_municipio = request.json['id-mun']
+
+        try:
+            delete_municipio(id_municipio)            
+            return {"response": True}
+        except:
+            return {"response": False}
+        
+@app.route("/municipios/habitantes", methods = ['POST'])
+def municipios_habitantes():
+    if request.method == "POST":
+        id_municipio = request.json['id-mun']
+
+        arr = []
+
+        try:
+            for i in select_un_habita_municipio(id_municipio).data: 
+                edad =  relativedelta.relativedelta(datetime.now(), datetime.strptime(i["num_documento"]["fecha_nacimiento"], '%Y-%m-%d'))
+                i["num_documento"] |= {"edad": edad.years}
+                arr.append(i["num_documento"])
+            print(arr)
+            return {"habitantes": arr}
+        except:
+            return {"habitantes": False}
+        # try:
+        #     select_un_habita_municipio(id_municipio)            
+        
+        # except:
+        #     return {"response": False}
+    
