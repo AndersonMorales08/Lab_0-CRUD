@@ -11,32 +11,28 @@
 <body>
     <div class="tabs">
         <div class="tab-container">
-            <div id="tab4" class="tab"> 
-                <a href="#tab4">Eliminar vivienda</a>
-                <div class="tab-content">
-                    <h2>Eliminar vivienda</h2>
-                    <!-- Formulario o contenido para eliminar vivienda -->
-                </div>
-            </div>
             <div id="tab3" class="tab"> 
                 <a href="#tab3">Ver viviendas</a>
                 <div class="tab-content">
                     <h2>Ver viviendas</h2>
                     <button id="mostrar-viviendas-btn">Mostrar viviendas</button>
-                    <div class="tabla-container">
-                        <table id="tabla-viviendas">
-                            <thead>
-                                <tr>
-                                    <th>Dirección</th>
-                                    <th>Capacidad</th>
-                                    <th>Pisos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Las viviendas se mostrarán aquí -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <table id="tabla-viviendas">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Dirección</th>
+                                <th>Capacidad</th>
+                                <th>Pisos</th>
+                                <th>ID Municipio</th>
+                                <th>ID Propietario</th>
+                                <th>Eliminar</th> <!-- Nueva columna para el botón de eliminar -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las viviendas se mostrarán aquí -->
+                        </tbody>
+                    </table>
+                    <div id="mensaje-exito" class="mensaje-exito" style="display: none;">Registro exitoso</div>
                 </div>
             </div>
             <div id="tab2" class="tab">
@@ -61,6 +57,13 @@
                                 <label for="pisos" class="label" id="label-pisos">Nuevo número de pisos:</label>
                                 <input type="number" class="input" name="pisos" id="pisos">
                             </div>
+                            <div id="div-id-municipio">
+                                <label for="id_municipio" class="label" id="label-id-municipio">ID del municipio:</label>
+                                <input class="input" type="text" name="id_municipio" id="id_municipio">
+                            </div>   
+                            <div id="div-id-propietario">
+                                <label for="id_propietario" class="label" id="label-id-propietario">ID del propietario:</label>
+                                <input class="input" type="text" name="id_propietario" id="id_propietario">
                             <input id="input-submit" type="submit" value="Actualizar">
                         </form>
                     </div>
@@ -83,6 +86,14 @@
                             <div id="div-pisos">
                                 <label for="pisos" class="label" id="label-pisos">Número de pisos</label>
                                 <input type="number" class="input" name="pisos" id="pisos">
+                            </div>
+                            <div id="div-id-municipio">
+                                <label for="id_municipio" class="label" id="label-id-municipio">ID del municipio:</label>
+                                <input class="input" type="text" name="id_municipio" id="id_municipio">
+                            </div>   
+                            <div id="div-id-propietario">
+                                <label for="id_propietario" class="label" id="label-id-propietario">ID del propietario:</label>
+                                <input class="input" type="text" name="id_propietario" id="id_propietario">
                             </div>
                             <input id="input-submit" type="submit" value="Enviar">
                         </form>

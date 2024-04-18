@@ -1,59 +1,106 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Escuchador de eventos para el botón "Mostrar viviendas"
-    document.getElementById("mostrar-viviendas-btn").addEventListener("click", function() {
-        console.log("Botón 'Mostrar viviendas' presionado.");
-        obtenerViviendas();
+document.addEventListener('DOMContentLoaded', function() {
+    const tablaViviendas = document.getElementById('tabla-viviendas');
+    const tbody = tablaViviendas.querySelector('tbody');
+
+    // Función para cargar los datos de las viviendas en la tabla
+    function cargarViviendas(data) {
+        tbody.innerHTML = ''; // Limpiar filas existentes
+        data.forEach(vivienda => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${vivienda.id_vivienda}</td>
+                <td>${vivienda.direccion}</td>
+                <td>${vivienda.capacidad}</td>
+                <td>${vivienda.pisos}</td>
+                <td>${vivienda.id_municipio}</td>
+                <td>${vivienda.id_propietario}</td>
+                <td>
+                    <button class="btn-eliminar" data-id="${vivienda.id_vivienda}">Eliminar</button>
+                </td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
+
+    // Evento para mostrar viviendas al hacer clic en el botón
+    const mostrarBtn = document.getElementById('mostrar-viviendas-btn');
+    mostrarBtn.addEventListener('click', function() {
+        fetch('/obtener_viviendas')
+            .then(response => response.json())
+            .then(data => cargarViviendas(data))
+            .catch(error => console.error('Error al cargar las viviendas:', error));
+    });
+
+    // Evento para eliminar vivienda al hacer clic en el botón
+    tbody.addEventListener('click', function(event) {
+        if (event.target.classList.contains('btn-eliminar')) {
+            const id_vivienda = event.target.dataset.id;
+            console.log('Eliminar vivienda', id_vivienda);
+            if (confirm('¿Estás seguro de que deseas eliminar esta vivienda?')) {
+                fetch(`/eliminar_vivienda/${id_vivienda}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.response) {
+                        // Vivienda eliminada exitosamente
+                        event.target.closest('tr').remove();
+                    } else {
+                        alert('Error al eliminar la vivienda');
+                    }
+                })
+                .catch(error => console.error('Error al eliminar la vivienda:', error));
+            }
+        }
+    });
+
+    // Evento para mostrar mensaje de éxito después de registrar una vivienda
+    const formularioRegistro = document.querySelector('form[action="/registrar_vivienda"]');
+    formularioRegistro.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar recargar la página
+        const formData = new FormData(formularioRegistro);
+        fetch('/registrar_vivienda', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const mensajeExito = document.getElementById('mensaje-exito');
+                mensajeExito.style.display = 'block';
+                setTimeout(() => {
+                    mensajeExito.style.display = 'none';
+                }, 3000); // Ocultar el mensaje después de 3 segundos
+            } else {
+                alert('Exito al registrar la vivienda');
+            }
+        })
+        .catch(error => console.error('Error al registrar la vivienda:', error));
+    });
+
+    // Evento para actualizar vivienda al enviar el formulario
+    const formularioActualizacion = document.querySelector('form[action="/actualizar_vivienda"]');
+    formularioActualizacion.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar recargar la página
+
+        // Obtener los datos del formulario
+        const formData = new FormData(formularioActualizacion);
+
+        // Enviar los datos al servidor para actualizar la vivienda
+        fetch('/actualizar_vivienda', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar mensaje de éxito
+                alert('La vivienda se ha actualizado correctamente.');
+            } else {
+                // Mostrar mensaje de error
+                alert('Error al actualizar la vivienda.');
+            }
+        })
+        .catch(error => console.error('Error al actualizar la vivienda:', error));
     });
 });
-
-function obtenerViviendas() {
-    console.log("Haciendo solicitud para obtener viviendas...");
-    // Realizar una solicitud GET a la ruta '/obtener_viviendas' en el servidor
-    fetch("/obtener_viviendas")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Hubo un problema al obtener las viviendas.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Viviendas obtenidas:", data);
-            // Llamar a la función para mostrar las viviendas en la tabla
-            mostrarViviendas(data);
-        })
-        .catch(error => {
-            console.error("Error al obtener las viviendas:", error);
-        });
-}
-
-function mostrarViviendas(viviendas) {
-    console.log("Mostrando viviendas en la tabla...");
-    // Obtener la tabla de viviendas
-    var tablaViviendas = document.getElementById("tabla-viviendas");
-
-    // Limpiar la tabla antes de agregar nuevas filas
-    tablaViviendas.innerHTML = "";
-
-    // Recorrer cada vivienda y agregar una fila a la tabla
-    viviendas.forEach(function(vivienda) {
-        var fila = document.createElement("tr");
-
-        var celdaId = document.createElement("td");
-        celdaId.textContent = vivienda.id;
-        fila.appendChild(celdaId);
-
-        var celdaDireccion = document.createElement("td");
-        celdaDireccion.textContent = vivienda.direccion;
-        fila.appendChild(celdaDireccion);
-
-        var celdaCapacidad = document.createElement("td");
-        celdaCapacidad.textContent = vivienda.capacidad;
-        fila.appendChild(celdaCapacidad);
-
-        var celdaPisos = document.createElement("td");
-        celdaPisos.textContent = vivienda.pisos;
-        fila.appendChild(celdaPisos);
-
-        tablaViviendas.appendChild(fila);
-    });
-}

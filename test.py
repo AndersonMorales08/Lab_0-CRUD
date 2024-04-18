@@ -132,31 +132,36 @@ def delete_habita_municipio(num_documento: str):
     return response 
 
 
-def registrar_vivienda_db(direccion: str, capacidad: int, pisos: int):
+def registrar_vivienda_db(direccion: str, capacidad: int, pisos: int, id_municipio: int,id_propietario: int):
     fecha_creacion = datetime.now().strftime("%Y-%m-%d")  # Convertir la fecha a una cadena
     response = supabase.table('Vivienda').insert({
         "direccion": direccion,
         "capacidad": capacidad,
         "pisos": pisos,
-        # "created_at": fecha_creacion
+        "id_municipio": id_municipio,
+        "id_propietario": id_propietario,
     }).execute()
     return response
 
-def actualizar_vivienda_db(vivienda_id: int, direccion: str, capacidad: int, pisos: int):
+def actualizar_vivienda_db(vivienda_id: int, direccion: str, capacidad: int, pisos: int,id_municipio: int,id_propietario: int):
     response, count = supabase.table('Vivienda').update({
         "direccion": direccion,
         "capacidad": capacidad,
-        "pisos": pisos
-    }).eq('vivienda_id', vivienda_id).execute()
+        "pisos": pisos,
+        "id_municipio": id_municipio,
+        "id_propietario": id_propietario,
+    }).eq('id_vivienda', vivienda_id).execute()
     return response
 
-def eliminar_vivienda(vivienda_id: int):
-    response, count = supabase.table('Vivienda').delete().eq('vivienda_id', vivienda_id).execute()
+def eliminar_vivienda_db(vivienda_id: int):
+    response, count = supabase.table('Vivienda').delete().eq('id_vivienda', vivienda_id).execute()
     return response
 
 def seleccionar_viviendas():
     response = supabase.table('Vivienda').select("*").execute()
+    print(response)
     return response
+
 
 
 

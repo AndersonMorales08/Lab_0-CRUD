@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
-from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, actualizar_vivienda_db, registrar_vivienda_db, seleccionar_viviendas, select_uno_habita_municipio, delete_cabeza, delete_dependiente, select_cabeza, select_solo_dependiente, actualizar_habita_municipio, select_un_habita_municipio, insertar_municipio, actualizar_municipio, delete_municipio
+from test import select_persona, insertar, actualizar_persona, delete_persona, select_municipio, select_dependiente, insertar_habita_municipio, insertar_dependiente, select_habita_municipio, delete_habita_municipio, actualizar_vivienda_db, registrar_vivienda_db,eliminar_vivienda_db, seleccionar_viviendas, select_uno_habita_municipio, delete_cabeza, delete_dependiente, select_cabeza, select_solo_dependiente, actualizar_habita_municipio, select_un_habita_municipio, insertar_municipio, actualizar_municipio, delete_municipio
 from datetime import datetime, date
 from dateutil import relativedelta
 
@@ -217,28 +217,36 @@ def actualizar_vivienda():
         direccion = request.form["direccion"]
         capacidad = request.form["capacidad"]
         pisos = request.form["pisos"]
+        id_municipio = int(request.form["id_municipio"])
+        propietario_id = int(request.form["id_propietario"])
 
         try:
             # Lógica para actualizar la vivienda en la base de datos
-            actualizar_vivienda_db(vivienda_id, direccion, capacidad, pisos)
-            return {"response": True}
-        except:
-            return {"response": False}
+            actualizar_vivienda_db(vivienda_id, direccion, capacidad, pisos, id_municipio,propietario_id)
+            return jsonify({"success": True})
+        except Exception as e:
+            print("Error al actualizar la vivienda:", e)
+            return jsonify({"success": False})
 
 @app.route("/registrar_vivienda", methods=['POST'])
 def registrar_vivienda():
     if request.method == "POST":
-        direccion = request.form["direccion"]
-        capacidad = request.form["capacidad"]
-        pisos = request.form["pisos"]
-        fecha_creacion = datetime.now().date()  # Obtiene la fecha actual del servidor
-
         try:
-            # Lógica para insertar la nueva vivienda en la base de datos
-            registrar_vivienda_db(direccion, capacidad, pisos)
-            return jsonify({"success": True})
+            direccion = request.form["direccion"]
+            capacidad = int(request.form["capacidad"])
+            pisos = int(request.form["pisos"])
+            id_municipio = int(request.form["id_municipio"])
+            propietario_id = int(request.form["id_propietario"])
+
+            # Lógica para registrar la vivienda en la base de datos
+            respuesta = registrar_vivienda_db(direccion, capacidad, pisos, id_municipio,propietario_id)
+            return {"success": True}
+
         except Exception as e:
-            return jsonify({"error": str(e)})
+            print(f"Error al registrar la vivienda: {e}")
+            return {"success": False, "error_message": str(e)}, 400
+
+
 
 @app.route('/obtener_viviendas', methods=['GET'])
 def obtener_viviendas():
@@ -254,6 +262,16 @@ def obtener_viviendas():
     except Exception as e:
         # Manejar cualquier excepción y retornar un mensaje de error
         return jsonify({"error": str(e)})
+
+@app.route("/eliminar_vivienda/<int:vivienda_id>", methods=["DELETE"])
+def eliminar_vivienda(vivienda_id):
+    try:
+        # Lógica para eliminar la vivienda de la base de datos
+        eliminar_vivienda_db(vivienda_id)
+        return {"response": True}
+    except Exception as e:
+        print(f"Error al eliminar la vivienda: {e}")
+        return {"response": False}
 
 
 @app.route("/municipios")

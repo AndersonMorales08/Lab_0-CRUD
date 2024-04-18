@@ -1,8 +1,7 @@
-/* Estilos generales */
 :root {
     --tabs-border-color: #ABCDEF;
     --tabs-border-size: 3px;
-    --tabs-text-color: white;
+    --tabs-text-color: white; /* Cambiar el color del texto a blanco para el resto de la página */
     --tabs-dark-color: #012345;
     --tabs-lite-color: #345678;
     --tabs-width: 150px;
@@ -12,6 +11,7 @@
 body {
     font-family: sans-serif;
     line-height: 1.2;
+    color: var(--tabs-text-color); /* Aplicar el color del texto a la página */
 }
 
 h2,
@@ -28,7 +28,6 @@ a {
     box-sizing: border-box;
 }
 
-/* Estilos para las pestañas y contenido */
 .tab-container {
     position: relative;
     padding-top: var(--tabs-height);
@@ -50,7 +49,6 @@ a {
 
 .tabs {
     padding: 10px;
-    color: var(--tabs-text-color);
 }
 
 .tab-content {
@@ -86,7 +84,6 @@ a {
     z-index: 0;
 }
 
-/* Estilos específicos para los formularios */
 .div-form {
     display: grid;
     grid-template-columns: 20% 60% 20%;
@@ -108,7 +105,6 @@ a {
 .input-delete {
     border-radius: 7px;
     padding: 5px 10px;
-    color: black;
     font-family: sans-serif;
 }
 
@@ -119,7 +115,7 @@ a {
 }
 
 .input-delete {
-    border: 2px solid rgb(100, 0, 0)
+    border: 2px solid rgb(100, 0, 0);
 }
 
 .input,
@@ -138,35 +134,47 @@ a {
     box-sizing: border-box;
 }
 
-/* Estilos para la tabla de viviendas */
 .tabla-container {
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 20px;
-    /* Añadido para separación */
 }
 
 #tabla-viviendas {
     width: 100%;
     border-collapse: collapse;
+    background-color: white; /* Cambiar el color de fondo de la tabla a blanco */
 }
 
 #tabla-viviendas th,
 #tabla-viviendas td {
     padding: 8px;
     border-bottom: 1px solid #ddd;
+    color: black; /* Cambiar el color del texto de la tabla a negro */
 }
 
-#tabla-viviendas th {
-    background-color: #f2f2f2;
-    text-align: left;
+.btn-actualizar,
+.btn-eliminar {
+    color: white; /* Mantener el color blanco para los botones */
+    background-color: #007bff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-/* Estilos para las etiquetas encima de la tabla */
-.table-labels {
-    font-weight: bold;
+.btn-actualizar:hover,
+.btn-eliminar:hover {
+    background-color: #0056b3;
+}
+
+.mensaje-exito {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
     margin-bottom: 10px;
-    text-align: center; /* Centrar el texto */
+    text-align: center;
 }
